@@ -291,7 +291,8 @@ if current == "overview":
     st.markdown('<div class="sec-hdr">🗺️ Study Area — Neighbourhoods</div>', unsafe_allow_html=True)
     fig = px.scatter_mapbox(
         urban_df, lat="latitude", lon="longitude",
-        color="tree_cover_pct", size="population_density" if "population_density" in urban_df.columns else None,
+        color="tree_cover_pct",
+        size="population_density" if "population_density" in urban_df.columns else None,
         color_continuous_scale="RdYlGn", zoom=10,
         mapbox_style="carto-darkmatter",
         size_max=10,
@@ -516,26 +517,36 @@ elif current == "qreg":
     st.markdown('<div class="hero-title">📈 Quantile Regression</div>', unsafe_allow_html=True)
     st.markdown('<div class="hero-sub">step3.ipynb · Surface Temp ~ Tree Cover + Asphalt · q = 0.25 → 0.95</div>', unsafe_allow_html=True)
 
+    # ── FIX: define column names upfront ──────────────────────
+    tc_col  = "tree_cover_pct"
+    asp_col = "asphalt_pct"
+
     try:
         import statsmodels.api as sm
+
+        # Merge temp_df with urban_df to bring in tree_cover_pct & asphalt_pct
         if "surface_temp" in temp_df.columns:
             data = temp_df.merge(
-                urban_df[["neighbourhood_id","tree_cover_pct","asphalt_pct"]],
+                urban_df[["neighbourhood_id", tc_col, asp_col]],
                 on="neighbourhood_id", how="left"
-            ).dropna(subset=["surface_temp","tree_cover_pct","asphalt_pct"])
+            ).dropna(subset=["surface_temp", tc_col, asp_col])
             y = data["surface_temp"]
-            X = sm.add_constant(data[["tree_cover_pct","asphalt_pct"]])
-            tc_col, asp_col = "tree_cover_pct", "asphalt_pct"
+            X = sm.add_constant(data[[tc_col, asp_col]])
         else:
-            raise ValueError("no surface_temp")
+            raise ValueError("no surface_temp column in temp_df")
+
         quantiles = [0.25, 0.50, 0.75, 0.90, 0.95]
         results = {}
         for q in quantiles:
             m = sm.QuantReg(y, X).fit(q=q, max_iter=2000)
-            results[q] = {"const": m.params.iloc[0],
-                          "tree":  m.params.iloc[1],
-                          "asphalt": m.params.iloc[2]}
+            results[q] = {
+                "const":   float(m.params.iloc[0]),
+                "tree":    float(m.params.iloc[1]),
+                "asphalt": float(m.params.iloc[2]),
+            }
+
     except Exception:
+        # Fallback coefficients matching notebook values
         results = {
             0.25: {"const": 31.20, "tree": -0.043, "asphalt": 0.136},
             0.50: {"const": 35.95, "tree": -0.045, "asphalt": 0.141},
@@ -577,28 +588,58 @@ elif current == "qreg":
     st.markdown('<div class="sec-hdr">Fitted Regression Lines</div>', unsafe_allow_html=True)
     rv = st.radio("View effect of", ["Tree Cover (%)", "Asphalt (%)"], horizontal=True)
     use_tree = "Tree" in rv
-    avg_tree = urban_df["tree_cover_pct"].mean()
-    avg_asp  = urban_df["asphalt_pct"].mean()
+    avg_tree = urban_df[tc_col].mean()
+    avg_asp  = urban_df[asp_col].mean()
+
     xrange = np.linspace(
-        urban_df["tree_cover_pct"].min() if use_tree else urban_df["asphalt_pct"].min(),
-        urban_df["tree_cover_pct"].max() if use_tree else urban_df["asphalt_pct"].max(), 200)
+        urban_df[tc_col].min()  if use_tree else urban_df[asp_col].min(),
+        urban_df[tc_col].max()  if use_tree else urban_df[asp_col].max(),
+        200
+    )
 
     fig_rl = go.Figure()
-    if "surface_temp" in temp_df.columns:
-        samp = temp_df.sample(min(2000, len(temp_df)), random_state=1)
-        xscat = samp[tc_col].values if use_tree else samp[asp_col].values if "asp_col" in dir() else xrange
-        fig_rl.add_trace(go.Scatter(x=xscat if use_tree else samp.get("asphalt_pct", pd.Series(xrange)).values,
-                                    y=samp["surface_temp"].values,
-                                    mode="markers", marker=dict(color="#555", size=3, opacity=0.3),
-                                    name="Observations"))
+
+    # ── FIX: build merged scatter sample so tc_col & asp_col exist ──
+    if "surface_temp" in temp_df.columns and tc_col in temp_df.columns:
+        # Real data already has those columns in temp_df
+        samp = temp_df[[tc_col, asp_col, "surface_temp"]].dropna().sample(
+            min(2000, len(temp_df)), random_state=1
+        )
+    elif "surface_temp" in temp_df.columns:
+        # Merge from urban_df
+        merged_for_scatter = temp_df.merge(
+            urban_df[["neighbourhood_id", tc_col, asp_col]],
+            on="neighbourhood_id", how="left"
+        ).dropna(subset=["surface_temp", tc_col, asp_col])
+        samp = merged_for_scatter[[tc_col, asp_col, "surface_temp"]].sample(
+            min(2000, len(merged_for_scatter)), random_state=1
+        )
+    else:
+        samp = None
+
+    if samp is not None:
+        xscat = samp[tc_col].values if use_tree else samp[asp_col].values
+        fig_rl.add_trace(go.Scatter(
+            x=xscat, y=samp["surface_temp"].values,
+            mode="markers",
+            marker=dict(color="#444d6e", size=4, opacity=0.4),
+            name="Observed"
+        ))
+
     qcolors = {0.25:"#3498db", 0.50:"#f7c59f", 0.75:"#e67e22", 0.90:"#e74c3c", 0.95:"#8e44ad"}
     for q in qs:
-        yp = (results[q]["const"] + results[q]["tree"]*xrange + results[q]["asphalt"]*avg_asp
-              if use_tree else
-              results[q]["const"] + results[q]["tree"]*avg_tree + results[q]["asphalt"]*xrange)
-        fig_rl.add_trace(go.Scatter(x=xrange, y=yp, mode="lines",
-                                    line=dict(color=qcolors[q], width=2.5), name=f"q={q}"))
-    dark_layout(fig_rl, height=430, title=f"Surface Temp vs {'Tree Cover' if use_tree else 'Asphalt'}")
+        if use_tree:
+            yp = results[q]["const"] + results[q]["tree"] * xrange + results[q]["asphalt"] * avg_asp
+        else:
+            yp = results[q]["const"] + results[q]["tree"] * avg_tree + results[q]["asphalt"] * xrange
+        fig_rl.add_trace(go.Scatter(
+            x=xrange, y=yp, mode="lines",
+            line=dict(color=qcolors[q], width=2.5),
+            name=f"q={q}"
+        ))
+
+    dark_layout(fig_rl, height=430,
+                title=f"Surface Temp vs {'Tree Cover' if use_tree else 'Asphalt'}")
     st.plotly_chart(fig_rl, use_container_width=True)
 
     c1, c2 = st.columns(2)
@@ -736,7 +777,7 @@ elif current == "sarima_risk":
 
     # Normalise & composite
     def znorm(s): return (s - s.mean()) / (s.std() + 1e-8)
-    if "aqi" in combined:
+    if "aqi" in combined.columns:
         combined["risk_index"] = (znorm(combined["avg_temp"])
                                   + znorm(combined["aqi"]) * 0.5
                                   + znorm(combined.get("heat_fatigue_cases", pd.Series(0, index=combined.index))) * 0.3)
@@ -870,16 +911,15 @@ elif current == "health":
             y1 = df_st.loc[X1.index, "surface_temp"]
             m1 = sm.OLS(y1, X1).fit()
 
-            coef_d1 = pd.DataFrame({
-                "Variable":    ["const"] + feat1,
-                "Coefficient": [f"{c:.4f}" for c in m1.params],
-                "Std Err":     [f"{s:.4f}" for s in m1.bse],
-                "t-stat":      [f"{t:.3f}" for t in m1.tvalues],
-                "p-value":     [f"{p:.4f}" for p in m1.pvalues],
+            coef_df = pd.DataFrame({
+                "Variable":    m1.params.index,
+                "Coefficient": m1.params.values,
+                "p-value":     m1.pvalues.values,
             })
+
             r1c, r1m = st.columns([2,1])
             with r1c:
-                st.dataframe(coef_d1, hide_index=True, use_container_width=True)
+                st.dataframe(coef_df, hide_index=True, use_container_width=True)
             with r1m:
                 st.metric("R²", f"{m1.rsquared:.3f}")
                 st.metric("F-stat", f"{m1.fvalue:.0f}")
@@ -905,10 +945,9 @@ elif current == "health":
 
             c2a, c2b = st.columns([2,1])
             coef_d2 = pd.DataFrame({
-                "Variable": ["const","avg_temp_lag3","social_vulnerability_index"],
-                "Coefficient": [f"{c:.4f}" for c in m2.params],
-                "Std Err": [f"{s:.4f}" for s in m2.bse],
-                "p-value": [f"{p:.4f}" for p in m2.pvalues],
+                "Variable":    m2.params.index,
+                "Coefficient": m2.params.values,
+                "p-value":     [f"{p:.4f}" for p in m2.pvalues],
             })
             with c2a: st.dataframe(coef_d2, hide_index=True, use_container_width=True)
             with c2b:
@@ -925,10 +964,9 @@ elif current == "health":
 
             c3a, c3b = st.columns([2,1])
             coef_d3 = pd.DataFrame({
-                "Variable": ["const","avg_temp_lag5","social_vulnerability_index"],
-                "Coefficient": [f"{c:.4f}" for c in m3_ols.params],
-                "Std Err": [f"{s:.4f}" for s in m3_ols.bse],
-                "p-value": [f"{p:.4f}" for p in m3_ols.pvalues],
+                "Variable":    m3_ols.params.index,
+                "Coefficient": m3_ols.params.values,
+                "p-value":     [f"{p:.4f}" for p in m3_ols.pvalues],
             })
             with c3a: st.dataframe(coef_d3, hide_index=True, use_container_width=True)
             with c3b:
