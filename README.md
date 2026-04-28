@@ -1,218 +1,90 @@
+<div align="center">
+  <img src="https://img.shields.io/badge/Status-Hackathon_Ready-success?style=for-the-badge" alt="Status" />
+  <img src="https://img.shields.io/badge/Domain-Spatial_Data_Science-blue?style=for-the-badge" alt="Domain" />
+  <img src="https://img.shields.io/badge/Tech-Python_%7C_Streamlit-orange?style=for-the-badge" alt="Tech" />
+  <br/><br/>
+  <h1>🌡️ Urban Heat Island (UHI) Intelligence Platform</h1>
+  <p><strong>A Data-Driven Approach to Identifying, Mitigating, and Predicting Heat Vulnerability in Cities</strong></p>
+</div>
 
 ---
 
-# 📊 Advanced Statistical & Spatial Data Analysis
+## 🚨 The Problem: Cities are Baking
+Urban Heat Islands (UHIs) are localized zones in cities that experience significantly higher temperatures than their rural surroundings. This isn't just an inconvenience—it's a public health crisis. 
+* **Increased Mortality:** Extreme heat is a leading cause of weather-related deaths.
+* **Energy Drain:** Higher temperatures demand more air conditioning, stressing power grids.
+* **Inequality:** Vulnerable and low-income populations are often disproportionately affected.
 
-![Python](https://img.shields.io/badge/Python-3.x-blue)
-![Statistics](https://img.shields.io/badge/Focus-Statistical%20Modeling-green)
-![Spatial Analysis](https://img.shields.io/badge/Domain-Spatial%20%26%20Time%20Series-orange)
-![Status](https://img.shields.io/badge/Project-Academic%20Research-critical)
+## 💡 Our Solution
+We built an **interactive, end-to-end analytical platform** that doesn't just show *where* it's hot, but explains *why* it's hot, and *what* it means for public health.
 
----
-
-## 📌 Project Overview
-
-This repository presents a structured implementation of advanced statistical methodologies across temporal, spatial, multivariate, and distribution-sensitive modeling frameworks.
-
-The objective is to rigorously evaluate structural dependencies in data and demonstrate appropriate model selection under violations of classical assumptions such as independence, homoscedasticity, and spatial randomness.
-
-The project integrates:
-
-* Time Series Modeling
-* Spatial Autocorrelation Analysis
-* Principal Component Analysis
-* Quantile Regression
-* Environmental–Health Statistical Modeling
-* Urban Surface Spatial Metrics
+By combining spatial statistics, time-series forecasting, and machine learning, our dashboard provides city planners and public health officials with actionable intelligence:
+1. **Identify hotspots** using spatial autocorrelation (LISA maps).
+2. **Understand drivers** (e.g., asphalt vs. tree cover) using Quantile Regression.
+3. **Forecast risks** using advanced SARIMAX modeling on an integrated Risk Index.
+4. **Quantify impact** on health metrics like heatstroke and fatigue.
 
 ---
 
-## 📁 Repository Structure
+## ✨ Key Features & Analytical Modules
 
-```
-├── Auto_Correlation.ipynb
-├── Principle Component Analysis.ipynb
-├── Quantile Regression.ipynb
-├── Spatial Auto Correlation.ipynb
-├── Tempreture_Health.ipynb
-├── Times_series_modal.ipynb
-├── UrbanSurface.ipynb
-└── README.md
-```
+Our Streamlit dashboard brings complex academic models into an intuitive UI:
+
+* 📊 **Urban Surface EDA:** Explore the relationships between 500+ neighbourhoods' structural factors (building density, tree cover, income).
+* 📍 **Spatial Clusters (LISA):** Moran's I and LISA cluster maps to visually pinpoint "Hot-Hot" zones requiring immediate intervention.
+* 🔬 **PCA Decomposition:** Dimensionality reduction to simplify complex urban indicators without losing information.
+* 📈 **Quantile Regression:** Understand how variables like tree cover affect the *extreme* hottest days differently than average days.
+* 📡 **SARIMAX Forecasting:** 30-day predictive modeling for both pure Surface Temperature and our composite **Heat Risk Index** (Temp + AQI + Health).
+* 🏥 **Temperature → Health Impact:** Lag-adjusted OLS models proving the direct correlation between heat spikes and hospital admissions.
 
 ---
 
-# 🔍 Notebook Summaries & Statistical Interpretation
+## 🚀 Quick Start (How to Run)
+
+The project includes a stunning, interactive Streamlit dashboard that runs out-of-the-box (with built-in realistic synthetic data for immediate demonstration).
+
+### Prerequisites
+* Python 3.8+
+* `pip`
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd DataVerse-P1-Stochastic_minds
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Launch the Dashboard:**
+   ```bash
+   streamlit run dashboard.py
+   ```
+
+*(Note: The dashboard automatically generates realistic synthetic urban data if real CSVs are not present, ensuring a flawless demo experience!)*
 
 ---
 
-## 1️⃣ Auto_Correlation.ipynb
-
-### Objective
-
-To assess temporal dependence and evaluate violation of independence assumptions.
-
-### Statistical Interpretation
-
-Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF) reveal statistically significant serial dependence across multiple lags. The null hypothesis of independence is rejected.
-
-This implies:
-
-* Classical regression assumptions are invalid.
-* ARIMA-class models are required.
-* Ignoring serial dependence would yield inefficient and biased estimators.
+## 🛠️ Tech Stack
+* **Frontend/Dashboard:** Streamlit, Plotly, HTML/CSS (Custom Premium Styling)
+* **Data Manipulation:** Pandas, NumPy
+* **Geospatial & Statistics:** GeoPandas, Scipy, Statsmodels (SARIMAX, OLS, Quantile Reg), Scikit-Learn (PCA)
+* **Spatial Autocorrelation:** PySAL, ESDA
 
 ---
 
-## 2️⃣ Principle Component Analysis.ipynb
-
-### Objective
-
-To reduce dimensionality while preserving variance structure.
-
-### Statistical Interpretation
-
-Eigenvalue decomposition of the covariance matrix demonstrates strong multicollinearity among predictors. A limited number of orthogonal principal components explain the majority of total variance.
-
-Implications:
-
-* Dimensionality reduction improves numerical stability.
-* Variance inflation is mitigated.
-* Information loss is statistically minimal.
+## 📚 Deep Dive (Jupyter Notebooks)
+For judges interested in the rigorous statistical proofs behind our dashboard, the raw Jupyter Notebooks are provided:
+* `UrbanSurface.ipynb` & `Auto_Correlation.ipynb`
+* `Spatial Auto Correlation.ipynb` & `Principle Component Analysis.ipynb`
+* `Quantile Regression.ipynb`
+* `Times_series_modal.ipynb` & `Tempreture_Health.ipynb`
 
 ---
-
-## 3️⃣ Quantile Regression.ipynb
-
-### Objective
-
-To estimate conditional relationships across distributional quantiles.
-
-### Statistical Interpretation
-
-Estimated regression coefficients vary across conditional quantiles, indicating heterogeneity in predictor effects.
-
-Key inference:
-
-* OLS estimates are insufficient when variance is non-constant.
-* Tail behavior differs significantly from mean behavior.
-* Quantile regression provides robust inference under heteroscedasticity.
-
----
-
-## 4️⃣ Spatial Auto Correlation.ipynb
-
-### Objective
-
-To detect geographic clustering and spatial dependence.
-
-### Statistical Interpretation
-
-Moran’s I statistic indicates statistically significant positive spatial autocorrelation. The null hypothesis of spatial randomness is rejected.
-
-Consequences:
-
-* Spatial independence assumption is violated.
-* Classical regression models are misspecified.
-* Spatial econometric models are required.
-
----
-
-## 5️⃣ Tempreture_Health.ipynb
-
-### Objective
-
-To model environmental effects on health indicators.
-
-### Statistical Interpretation
-
-Temperature variability exhibits statistically significant association with health outcomes. Evidence suggests potential non-linear and seasonal components.
-
-Policy implication:
-
-Environmental factors materially influence public health metrics and must be incorporated into predictive models.
-
----
-
-## 6️⃣ Times_series_modal.ipynb
-
-### Objective
-
-To construct and validate forecasting models.
-
-### Statistical Interpretation
-
-Stationarity tests necessitated differencing. The fitted ARIMA model satisfies residual diagnostics and captures stochastic structure adequately.
-
-Inference:
-
-* Model assumptions are statistically validated.
-* Forecasts are structurally defensible.
-* Residual independence confirms adequate model specification.
-
----
-
-## 7️⃣ UrbanSurface.ipynb
-
-### Objective
-
-To analyze spatial heterogeneity in urban surface characteristics.
-
-### Statistical Interpretation
-
-Spatial metrics reveal clustering and heterogeneity, rejecting the assumption of spatial uniformity.
-
-Conclusion:
-
-Urban structure is governed by systematic geographic processes rather than random dispersion.
-
----
-
-# 📈 Global Statistical Conclusions
-
-Across all analyses:
-
-1. Independence assumptions are routinely violated in real-world datasets.
-2. Distributional heterogeneity invalidates mean-based inference alone.
-3. Spatial and temporal dependence must be explicitly modeled.
-4. Dimensionality reduction enhances stability without sacrificing explanatory power.
-5. Diagnostic validation is mandatory for inferential credibility.
-
-This project demonstrates rigorous applied statistical reasoning across multiple advanced frameworks.
-
----
-
-# 🛠 Technical Stack
-
-* Python 3.x
-* numpy
-* pandas
-* statsmodels
-* scikit-learn
-* matplotlib
-* geopandas
-
----
-
-# 📚 Methodological Domains Covered
-
-* Time Series Econometrics
-* Spatial Statistics
-* Multivariate Analysis
-* Robust Regression
-* Environmental Statistical Modeling
-
----
-
-# 🎯 Academic Value
-
-This repository demonstrates:
-
-* Correct identification of assumption violations
-* Appropriate model selection
-* Diagnostic validation
-* Formal statistical interpretation
-
-It is structured for academic submission, research presentation, or advanced coursework evaluation.
-
----
+<div align="center">
+  <i>Built with ❤️ for the DataVerse Hackathon</i>
+</div>

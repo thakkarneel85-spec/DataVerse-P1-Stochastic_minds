@@ -33,53 +33,182 @@ st.set_page_config(
 # ──────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-  .stApp { background-color: #0d0f1a; color: #dde1f0; }
-  section[data-testid="stSidebar"] { background: #11131e; }
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
+  /* Animated Gradient Background */
+  .stApp { 
+      background: radial-gradient(circle at 50% 0%, #15002b 0%, #05050f 60%, #000000 100%);
+      background-size: 200% 200%;
+      animation: gradientBG 15s ease infinite;
+      color: #e2e8f0; 
+      font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+      font-family: 'Outfit', sans-serif !important;
+  }
+
+  /* Sidebar Overhaul */
+  section[data-testid="stSidebar"] { 
+      background: rgba(10, 10, 18, 0.6) !important; 
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
+  /* Hide Streamlit default UI elements */
+  #MainMenu {visibility: hidden;}
+  footer {visibility: hidden;}
+  header {visibility: hidden;}
+
+  /* Typography */
   .hero-title {
-      font-size: 2.5rem; font-weight: 900; letter-spacing: 1px;
-      background: linear-gradient(90deg,#ff6b35,#f7c59f,#a8edea);
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.5rem; font-weight: 800; letter-spacing: -1px;
+      background: linear-gradient(90deg, #08F7FE, #FE53BB, #F5D300);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      text-align: center; margin-bottom: .2rem;
+      text-align: center; margin-bottom: 0.5rem;
+      animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .hero-sub { text-align:center; color:#7a82a0; font-size:.9rem; margin-bottom:1.5rem; }
+  .hero-sub { text-align:center; color:#94a3b8; font-size:1.2rem; margin-bottom:3rem; font-weight: 400;}
 
+  /* Cards with Premium Glassmorphism */
   .step-card {
-      background: linear-gradient(135deg,#161929 0%,#1e2235 100%);
-      border-left: 4px solid #ff6b35; border-radius: 10px;
-      padding: 1rem 1.3rem; margin-bottom: .8rem;
+      background: rgba(20, 20, 35, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 1.5rem; margin-bottom: 1.2rem;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
   }
+  .step-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+      background: #08F7FE;
+      transition: all 0.3s ease;
+  }
+  .step-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px -5px rgba(8, 247, 254, 0.15), 0 0 15px rgba(254, 83, 187, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .step-card:hover::before {
+      box-shadow: 0 0 15px #08F7FE, 0 0 30px #FE53BB;
+  }
+  
   .step-badge {
-      display:inline-block; background:#ff6b35; color:#fff;
-      font-size:.7rem; font-weight:700; letter-spacing:2px;
-      padding:2px 10px; border-radius:20px; margin-bottom:.4rem;
+      display:inline-block; background: rgba(8, 247, 254, 0.1); color:#08F7FE;
+      font-size:0.75rem; font-weight:700; letter-spacing:1.5px; text-transform: uppercase;
+      padding:6px 14px; border-radius:24px; margin-bottom:1rem;
+      border: 1px solid rgba(8, 247, 254, 0.3);
+      box-shadow: 0 0 10px rgba(8, 247, 254, 0.1);
   }
-  .step-title { font-size:1.05rem; font-weight:700; color:#fff; }
-  .step-desc  { font-size:.82rem; color:#9aa3c0; margin-top:.25rem; }
+  .step-title { font-family: 'Outfit', sans-serif; font-size:1.3rem; font-weight:600; color:#ffffff; margin-bottom: 0.5rem;}
+  .step-desc  { font-size:0.95rem; color:#cbd5e1; line-height: 1.6; }
 
+  /* Section Headers */
   .sec-hdr {
-      font-size:1.2rem; font-weight:700; color:#ff6b35;
-      border-bottom:2px solid #252840; padding-bottom:.35rem; margin-bottom:.9rem;
+      font-family: 'Outfit', sans-serif;
+      font-size:1.5rem; font-weight:700; color:#ffffff;
+      border-bottom:1px solid rgba(255, 255, 255, 0.05); 
+      padding-bottom:0.8rem; margin-top:2.5rem; margin-bottom:1.5rem;
+      display: flex; align-items: center; gap: 12px;
+  }
+  .sec-hdr::before {
+      content: ''; display: inline-block; width: 6px; height: 24px;
+      background: linear-gradient(to bottom, #08F7FE, #FE53BB); border-radius: 4px;
+      box-shadow: 0 0 8px #08F7FE;
   }
 
-  .kpi-wrap { display:flex; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem; }
-  .kpi-box {
-      flex:1; min-width:130px;
-      background:#161929; border-radius:10px; padding:.9rem 1rem;
-      border-top:3px solid #ff6b35; text-align:center;
+  /* Custom KPI Card CSS */
+  .kpi-wrapper {
+      display: flex; flex-direction: column;
+      width: 100%;
+      background: linear-gradient(145deg, rgba(30, 30, 45, 0.6) 0%, rgba(15, 15, 25, 0.8) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02), 0 4px 20px rgba(0,0,0,0.5);
+      box-sizing: border-box;
   }
-  .kpi-val { font-size:1.5rem; font-weight:800; color:#ff6b35; }
-  .kpi-lbl { font-size:.72rem; color:#9aa3c0; margin-top:.15rem; }
+  .kpi-wrapper:hover {
+      transform: translateY(-3px);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 10px 30px rgba(8,247,254,0.1);
+      border-color: rgba(8, 247, 254, 0.3);
+  }
+  .kpi-title {
+      font-family: 'Outfit', sans-serif;
+      color: #94a3b8; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+  }
+  .kpi-val {
+      font-family: 'Outfit', sans-serif;
+      color: #ffffff; font-size: 2.2rem; font-weight: 800;
+      text-shadow: 0 0 10px rgba(255,255,255,0.2);
+  }
 
+  /* Info/Warn Boxes */
   .info-box {
-      background:#1a1d2e; border-left:4px solid #a8edea;
-      border-radius:8px; padding:.8rem 1rem; margin:.5rem 0;
-      font-size:.85rem; color:#c0cce0;
+      background: rgba(8, 247, 254, 0.05); border-left: 4px solid #08F7FE;
+      border-radius: 8px; padding: 1.2rem; margin: 1.2rem 0;
+      font-size: 0.95rem; color: #bae6fd;
+      box-shadow: 0 0 15px rgba(8, 247, 254, 0.05);
   }
   .warn-box {
-      background:#1a1d2e; border-left:4px solid #ff6b35;
-      border-radius:8px; padding:.8rem 1rem; margin:.5rem 0;
-      font-size:.85rem; color:#c0cce0;
+      background: rgba(254, 83, 187, 0.05); border-left: 4px solid #FE53BB;
+      border-radius: 8px; padding: 1.2rem; margin: 1.2rem 0;
+      font-size: 0.95rem; color: #fecdd3;
+      box-shadow: 0 0 15px rgba(254, 83, 187, 0.05);
+  }
+
+  /* Insight Box */
+  .insight-box {
+      background: linear-gradient(135deg, rgba(8,247,254,0.06) 0%, rgba(254,83,187,0.04) 100%);
+      border: 1px solid rgba(8,247,254,0.2);
+      border-radius: 12px; padding: 1rem 1.4rem; margin: 1rem 0;
+      font-size: 0.95rem; color: #e2e8f0; line-height: 1.7;
+  }
+  .insight-box strong { color: #08F7FE; }
+
+  /* Sidebar branding */
+  .sidebar-logo {
+      font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800;
+      background: linear-gradient(90deg, #08F7FE, #FE53BB);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .live-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.4);
+      border-radius: 20px; padding: 3px 10px; font-size: 0.75rem;
+      color: #27ae60; font-weight: 600; margin-top: 4px;
+  }
+  .live-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #27ae60;
+      animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+  }
+  .sidebar-footer {
+      font-size: 0.73rem; color: #475569; text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      padding-top: 0.8rem; margin-top: 0.8rem;
+  }
+
+  @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
   }
 </style>
 """, unsafe_allow_html=True)
@@ -87,23 +216,37 @@ st.markdown("""
 # ──────────────────────────────────────────────────────────────
 # Colour palette helpers
 # ──────────────────────────────────────────────────────────────
-DARK_BG   = "#0d0f1a"
-CARD_BG   = "#161929"
-PLOT_BG   = "#1e2235"
-ACCENT    = "#ff6b35"
-FONT_COL  = "#dde1f0"
+DARK_BG   = "rgba(0,0,0,0)" 
+PLOT_BG   = "rgba(0,0,0,0)"
+ACCENT    = "#08F7FE" # Cyan
+ACCENT_2  = "#FE53BB" # Magenta
+ACCENT_3  = "#F5D300" # Yellow
+FONT_COL  = "#e2e8f0"
 
 def dark_layout(fig, height=400, title=None):
     kw = dict(paper_bgcolor=DARK_BG, plot_bgcolor=PLOT_BG,
               font_color=FONT_COL, height=height,
-              legend=dict(bgcolor="rgba(0,0,0,0)"),
-              margin=dict(l=10, r=10, t=40 if title else 20, b=10))
+              legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color=FONT_COL)),
+              margin=dict(l=20, r=20, t=60 if title else 20, b=20),
+              font=dict(family="Plus Jakarta Sans, sans-serif"))
     if title:
-        kw["title"] = title
+        kw["title"] = dict(text=title, font=dict(family="Outfit, sans-serif", size=18, color="#ffffff"))
     fig.update_layout(**kw)
-    fig.update_xaxes(gridcolor="#252840", zerolinecolor="#252840")
-    fig.update_yaxes(gridcolor="#252840", zerolinecolor="#252840")
+    fig.update_xaxes(gridcolor="rgba(255,255,255,0.03)", zerolinecolor="rgba(255,255,255,0.05)", 
+                     title_font=dict(color="#94a3b8"), tickfont=dict(color="#64748b"))
+    fig.update_yaxes(gridcolor="rgba(255,255,255,0.03)", zerolinecolor="rgba(255,255,255,0.05)", 
+                     title_font=dict(color="#94a3b8"), tickfont=dict(color="#64748b"))
     return fig
+
+def kpi_card(title, value):
+    return f"""<div class="kpi-wrapper">
+        <div class="kpi-title">{title}</div>
+        <div class="kpi-val">{value}</div>
+    </div>"""
+
+def insight_card(icon, text):
+    """Render a styled AI-insight box."""
+    return f'<div class="insight-box">{icon} {text}</div>'
 
 
 # ──────────────────────────────────────────────────────────────
@@ -223,7 +366,11 @@ urban_df, temp_df, health_df, air_df, IS_SYNTH = load_all()
 # Sidebar
 # ──────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## 🌡️ UHI Dashboard")
+    st.markdown('<div class="sidebar-logo">🌡️ DataVerse UHI</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="live-badge"><div class="live-dot"></div>Live Dashboard</div>',
+        unsafe_allow_html=True
+    )
     if IS_SYNTH:
         st.warning("**Demo mode** — synthetic data.\n\nPlace real CSVs beside the script to activate live results.", icon="⚠️")
     st.markdown("---")
@@ -236,18 +383,20 @@ with st.sidebar:
         "📈 Quantile Regression":       "qreg",
         "📡 SARIMAX — Surface Temp":    "sarima_temp",
         "🌀 SARIMAX — Risk Index":      "sarima_risk",
+        "💨 Air Quality Analysis":      "airquality",
         "🏥 Temperature → Health":      "health",
     }
     page = st.radio("Navigate", list(PAGES.keys()))
     current = PAGES[page]
 
     st.markdown("---")
-    st.markdown("**Study Area**")
-    st.markdown(f"- Neighbourhoods: **{len(urban_df):,}**")
-    st.markdown(f"- Temp records: **{len(temp_df):,}**")
-    st.markdown(f"- Health records: **{len(health_df):,}**")
-    st.markdown(f"- Air quality: **{len(air_df):,}**")
-    st.markdown("- City: Vadodara, Gujarat 🇮🇳")
+    st.markdown("**📍 Study Area**")
+    st.markdown(f"- 🏘️ Neighbourhoods: **{len(urban_df):,}**")
+    st.markdown(f"- 🌡️ Temp records: **{len(temp_df):,}**")
+    st.markdown(f"- 🏥 Health records: **{len(health_df):,}**")
+    st.markdown(f"- 💨 Air quality: **{len(air_df):,}**")
+    st.markdown("- 📌 City: Vadodara, Gujarat 🇮🇳")
+    st.markdown('<div class="sidebar-footer">Dataverse · Stochastic Minds · 2024<br>Built with Streamlit + Plotly</div>', unsafe_allow_html=True)
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #  P A G E S
@@ -266,7 +415,7 @@ if current == "overview":
         ("Hot-Hot Clusters",f"{(urban_df['cluster']=='High-High').sum() if 'cluster' in urban_df else '—'}"),
     ]
     for col, (lbl, val) in zip(cols, kpis):
-        col.metric(lbl, val)
+        col.markdown(kpi_card(lbl, val), unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -287,19 +436,44 @@ if current == "overview":
             <div class="step-desc">{desc}</div>
         </div>""", unsafe_allow_html=True)
 
-    # Quick overview map
+    # Quick overview map + fallback
     st.markdown('<div class="sec-hdr">🗺️ Study Area — Neighbourhoods</div>', unsafe_allow_html=True)
-    fig = px.scatter_mapbox(
-        urban_df, lat="latitude", lon="longitude",
-        color="tree_cover_pct",
-        size="population_density" if "population_density" in urban_df.columns else None,
-        color_continuous_scale="RdYlGn", zoom=10,
-        mapbox_style="carto-darkmatter",
-        size_max=10,
-        hover_data={"tree_cover_pct": True, "asphalt_pct": True},
-    )
-    dark_layout(fig, height=420)
-    st.plotly_chart(fig, use_container_width=True)
+    map_ok = False
+    for style in ["carto-darkmatter", "open-street-map"]:
+        try:
+            fig = px.scatter_mapbox(
+                urban_df, lat="latitude", lon="longitude",
+                color="tree_cover_pct",
+                size="population_density" if "population_density" in urban_df.columns else None,
+                color_continuous_scale="RdYlGn", zoom=10,
+                mapbox_style=style,
+                size_max=10,
+                hover_data={"tree_cover_pct": True, "asphalt_pct": True},
+            )
+            dark_layout(fig, height=440)
+            st.plotly_chart(fig, use_container_width=True)
+            map_ok = True
+            break
+        except Exception:
+            continue
+    if not map_ok:
+        st.info("Map requires internet access. Showing scatter plot fallback.")
+        fig_fb = px.scatter(urban_df, x="longitude", y="latitude",
+                            color="tree_cover_pct", color_continuous_scale="RdYlGn",
+                            size="population_density" if "population_density" in urban_df.columns else None,
+                            size_max=12, opacity=0.7)
+        dark_layout(fig_fb, height=440, title="Neighbourhood Map (Scatter Fallback)")
+        st.plotly_chart(fig_fb, use_container_width=True)
+
+    # Export buttons
+    st.markdown('<div class="sec-hdr">📥 Export Data</div>', unsafe_allow_html=True)
+    ec1, ec2, ec3 = st.columns(3)
+    ec1.download_button("⬇️ Urban Data CSV",  urban_df.to_csv(index=False).encode(),
+                        "urban_surface.csv",  "text/csv", use_container_width=True)
+    ec2.download_button("⬇️ Temp Data CSV",   temp_df.to_csv(index=False).encode(),
+                        "temperature.csv",    "text/csv", use_container_width=True)
+    ec3.download_button("⬇️ Health Data CSV", health_df.to_csv(index=False).encode(),
+                        "health.csv",         "text/csv", use_container_width=True)
 
 
 # ──────────────────────────────── EDA ─────────────────────────
@@ -430,6 +604,58 @@ elif current == "lisa":
     dark_layout(fig_box, height=380, title=f"{vsel} by LISA Cluster")
     fig_box.update_layout(showlegend=False)
     st.plotly_chart(fig_box, use_container_width=True)
+
+    # K-Means Clustering
+    st.markdown('<div class="sec-hdr">Machine Learning Risk Zones (K-Means)</div>', unsafe_allow_html=True)
+    st.info("K-Means clustering identifies distinct urban typologies based on structure, without relying solely on spatial contiguity.")
+    
+    try:
+        from sklearn.cluster import KMeans
+        from sklearn.preprocessing import StandardScaler
+        
+        km_vars = ["tree_cover_pct", "asphalt_pct", "building_density"]
+        if all(v in urban_df.columns for v in km_vars):
+            # BUG FIX: use .copy() to avoid SettingWithCopyWarning
+            X_km = urban_df[km_vars].dropna().copy()
+            km_idx = X_km.index
+            X_scaled = StandardScaler().fit_transform(X_km)
+
+            kmeans = KMeans(n_clusters=3, random_state=42, n_init="auto")
+            X_km["KMeans_Cluster"] = kmeans.fit_predict(X_scaled)
+
+            # Map clusters to risk levels based on asphalt/tree cover
+            cluster_means = X_km.groupby("KMeans_Cluster")[km_vars].mean()
+            sorted_clusters = cluster_means.sort_values(by="asphalt_pct").index
+            risk_map = {sorted_clusters[0]: "Low Risk", sorted_clusters[1]: "Medium Risk", sorted_clusters[2]: "High Risk"}
+            X_km["Risk_Level"] = X_km["KMeans_Cluster"].map(risk_map)
+
+            urban_df_km = urban_df.loc[km_idx].copy()
+            urban_df_km["Risk_Level"] = X_km["Risk_Level"].values
+
+            KM_CMAP = {"Low Risk": "#27ae60", "Medium Risk": "#f39c12", "High Risk": "#c0392b"}
+
+            for style in ["carto-darkmatter", "open-street-map"]:
+                try:
+                    fig_km = px.scatter_mapbox(urban_df_km, lat="latitude", lon="longitude",
+                                               color="Risk_Level", color_discrete_map=KM_CMAP,
+                                               zoom=10, mapbox_style=style)
+                    fig_km.update_traces(marker_size=7)
+                    dark_layout(fig_km, height=420, title="K-Means Urban Risk Zones")
+                    st.plotly_chart(fig_km, use_container_width=True)
+                    break
+                except Exception:
+                    continue
+
+            # KMeans distribution bar
+            risk_counts = X_km["Risk_Level"].value_counts().reset_index()
+            risk_counts.columns = ["Risk Level", "Count"]
+            fig_km_bar = px.bar(risk_counts, x="Risk Level", y="Count",
+                                color="Risk Level", color_discrete_map=KM_CMAP,
+                                text="Count")
+            dark_layout(fig_km_bar, height=300, title="Neighbourhood Distribution by Risk Zone")
+            st.plotly_chart(fig_km_bar, use_container_width=True)
+    except Exception as e:
+        st.warning(f"K-Means clustering failed: {e}")
 
 
 # ──────────────────────────────── PCA ─────────────────────────
@@ -666,9 +892,9 @@ elif current == "sarima_temp":
     adf = adfuller(y.dropna())
     st.markdown('<div class="sec-hdr">Stationarity Check — ADF Test</div>', unsafe_allow_html=True)
     sc1, sc2, sc3 = st.columns(3)
-    sc1.metric("ADF Statistic", f"{adf[0]:.4f}")
-    sc2.metric("p-value",       f"{adf[1]:.4f}")
-    sc3.metric("Stationary?",   "Yes ✅" if adf[1] < 0.05 else "No ❌ (differencing needed)")
+    sc1.markdown(kpi_card("ADF Statistic", f"{adf[0]:.4f}"), unsafe_allow_html=True)
+    sc2.markdown(kpi_card("p-value",       f"{adf[1]:.4f}"), unsafe_allow_html=True)
+    sc3.markdown(kpi_card("Stationary?",   "Yes ✅" if adf[1] < 0.05 else "No ❌ (differencing needed)"), unsafe_allow_html=True)
 
     # Time series plot
     st.markdown('<div class="sec-hdr">Surface Temperature Time Series</div>', unsafe_allow_html=True)
@@ -698,14 +924,19 @@ elif current == "sarima_temp":
 
     fig_acf = make_subplots(rows=1, cols=2, subplot_titles=["ACF — Differenced","PACF — Differenced"])
     ci_line = 1.96 / np.sqrt(len(y_diff))
+    # BUG FIX: add_hline doesn't support row/col in subplots → use add_shape
+    xref_map = {1: "x", 2: "x2"}
+    yref_map = {1: "y", 2: "y2"}
     for lags, vals, col in [(range(1, max_lag+1), acf_vals, 1),
                             (range(1, max_lag+1), pacf_vals, 2)]:
         for lg, v in zip(lags, vals):
             fig_acf.add_trace(go.Bar(x=[lg], y=[v],
                                      marker_color=ACCENT if abs(v) > ci_line else "#3a3f5c",
                                      showlegend=False), row=1, col=col)
-        fig_acf.add_hline(y= ci_line, line_dash="dot", line_color="#a8edea", row=1, col=col)
-        fig_acf.add_hline(y=-ci_line, line_dash="dot", line_color="#a8edea", row=1, col=col)
+        for ci_val in [ci_line, -ci_line]:
+            fig_acf.add_shape(type="line", x0=0, x1=max_lag+1, y0=ci_val, y1=ci_val,
+                              line=dict(color="#a8edea", dash="dot", width=1),
+                              xref=xref_map[col], yref=yref_map[col])
     dark_layout(fig_acf, height=330)
     st.plotly_chart(fig_acf, use_container_width=True)
 
@@ -734,9 +965,9 @@ elif current == "sarima_temp":
             rmse = mae = float("nan"); fitted_ok = False
 
     m1, m2, m3 = st.columns(3)
-    m1.metric("Model", "SARIMAX(1,1,1)×(1,1,1,7)")
-    m2.metric("RMSE",  f"{rmse:.4f} °C" if fitted_ok else "—")
-    m3.metric("MAE",   f"{mae:.4f} °C"  if fitted_ok else "—")
+    m1.markdown(kpi_card("Model", "SARIMAX(1,1,1)×(1,1,1,7)"), unsafe_allow_html=True)
+    m2.markdown(kpi_card("RMSE",  f"{rmse:.4f} °C" if fitted_ok else "—"), unsafe_allow_html=True)
+    m3.markdown(kpi_card("MAE",   f"{mae:.4f} °C"  if fitted_ok else "—"), unsafe_allow_html=True)
 
     fig_fc = go.Figure()
     fig_fc.add_trace(go.Scatter(x=y.index[-120:], y=y.values[-120:],
@@ -778,9 +1009,11 @@ elif current == "sarima_risk":
     # Normalise & composite
     def znorm(s): return (s - s.mean()) / (s.std() + 1e-8)
     if "aqi" in combined.columns:
+        # BUG FIX: DataFrame has no .get(); use column existence check
+        hf_series = combined["heat_fatigue_cases"] if "heat_fatigue_cases" in combined.columns else pd.Series(0, index=combined.index)
         combined["risk_index"] = (znorm(combined["avg_temp"])
                                   + znorm(combined["aqi"]) * 0.5
-                                  + znorm(combined.get("heat_fatigue_cases", pd.Series(0, index=combined.index))) * 0.3)
+                                  + znorm(hf_series) * 0.3)
     elif "risk_index" in temp_df.columns:
         combined["risk_index"] = temp_df.groupby("date")["risk_index"].mean()
     else:
@@ -845,9 +1078,9 @@ elif current == "sarima_risk":
             rmse_r = mae_r = float("nan"); fit_ok_r = False
 
     m1, m2, m3 = st.columns(3)
-    m1.metric("Model", "SARIMAX(1,1,1)×(1,0,1,7)")
-    m2.metric("RMSE", f"{rmse_r:.4f}" if fit_ok_r else "—")
-    m3.metric("MAE",  f"{mae_r:.4f}"  if fit_ok_r else "—")
+    m1.markdown(kpi_card("Model", "SARIMAX(1,1,1)×(1,0,1,7)"), unsafe_allow_html=True)
+    m2.markdown(kpi_card("RMSE", f"{rmse_r:.4f}" if fit_ok_r else "—"), unsafe_allow_html=True)
+    m3.markdown(kpi_card("MAE",  f"{mae_r:.4f}"  if fit_ok_r else "—"), unsafe_allow_html=True)
     st.caption("Notebook MAE ≈ 0.308 · RMSE ≈ 0.370")
 
     fig_rfore = go.Figure()
@@ -862,6 +1095,44 @@ elif current == "sarima_risk":
         line=dict(color="rgba(0,0,0,0)"), name="95% CI"))
     dark_layout(fig_rfore, height=400, title=f"Risk Index — {steps_r}-day SARIMAX Forecast")
     st.plotly_chart(fig_rfore, use_container_width=True)
+
+    st.markdown('<div class="sec-hdr">Machine Learning Forecast (Random Forest)</div>', unsafe_allow_html=True)
+    with st.spinner("Fitting Random Forest Regressor..."):
+        try:
+            from sklearn.ensemble import RandomForestRegressor
+            
+            # Create lag features
+            df_rf = pd.DataFrame({"y": y_risk})
+            for i in range(1, 8):
+                df_rf[f"lag_{i}"] = df_rf["y"].shift(i)
+            df_rf = df_rf.dropna()
+            
+            rf_train_y = df_rf["y"].iloc[:-steps_r]
+            rf_train_X = df_rf.drop(columns=["y"]).iloc[:-steps_r]
+            rf_test_y = df_rf["y"].iloc[-steps_r:]
+            rf_test_X = df_rf.drop(columns=["y"]).iloc[-steps_r:]
+            
+            rf = RandomForestRegressor(n_estimators=100, random_state=42)
+            rf.fit(rf_train_X, rf_train_y)
+            rf_pred = rf.predict(rf_test_X)
+            
+            rmse_rf = float(np.sqrt(((rf_test_y.values - rf_pred)**2).mean()))
+            mae_rf = float(np.abs(rf_test_y.values - rf_pred).mean())
+            
+            m1_rf, m2_rf, m3_rf = st.columns(3)
+            m1_rf.markdown(kpi_card("Model", "Random Forest (7-day Lags)"), unsafe_allow_html=True)
+            m2_rf.markdown(kpi_card("RMSE", f"{rmse_rf:.4f}"), unsafe_allow_html=True)
+            m3_rf.markdown(kpi_card("MAE",  f"{mae_rf:.4f}"), unsafe_allow_html=True)
+            
+            fig_rf = go.Figure()
+            fig_rf.add_trace(go.Scatter(x=y_risk.index[-120:], y=y_risk.values[-120:],
+                                           mode="lines", line=dict(color="#a8edea", width=1.5), name="Actual"))
+            fig_rf.add_trace(go.Scatter(x=rf_test_y.index, y=rf_pred,
+                                           mode="lines", line=dict(color="#FF6B6B", width=2.5), name="RF Forecast"))
+            dark_layout(fig_rf, height=400, title=f"Risk Index — {steps_r}-day Random Forest Forecast")
+            st.plotly_chart(fig_rf, use_container_width=True)
+        except Exception as e:
+            st.warning(f"Random Forest fit failed: {e}")
 
     # Component decomposition
     st.markdown('<div class="sec-hdr">Seasonal Decomposition</div>', unsafe_allow_html=True)
@@ -881,8 +1152,130 @@ elif current == "sarima_risk":
         st.info("Seasonal decomposition requires at least 2 full periods of data.")
 
 
+
+# ──────────────────────────── AIR QUALITY ─────────────────────
+elif current == "airquality":
+    st.markdown('<div class="hero-title">💨 Air Quality Deep Dive</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-sub">PM2.5 · PM10 · NO₂ · O₃ · AQI trends, risk categories & temperature linkage</div>', unsafe_allow_html=True)
+
+    aq_cols = [c for c in ["pm25","pm10","no2","o3","aqi"] if c in air_df.columns]
+    if not aq_cols:
+        st.warning("No air quality columns found.")
+    else:
+        # ── KPI Row ───────────────────────────────────────────
+        st.markdown('<div class="sec-hdr">📊 Current Air Quality Summary</div>', unsafe_allow_html=True)
+        kpi_cols = st.columns(len(aq_cols))
+        labels = {"pm25":"PM2.5 (µg/m³)","pm10":"PM10 (µg/m³)","no2":"NO₂ (µg/m³)","o3":"O₃ (µg/m³)","aqi":"AQI"}
+        for col_el, col_name in zip(kpi_cols, aq_cols):
+            mean_val = air_df[col_name].mean()
+            col_el.markdown(kpi_card(labels.get(col_name, col_name), f"{mean_val:.1f}"), unsafe_allow_html=True)
+
+        # ── AQI Risk Categories ───────────────────────────────
+        st.markdown('<div class="sec-hdr">🎨 AQI Risk Category Distribution</div>', unsafe_allow_html=True)
+        if "aqi" in air_df.columns:
+            def aqi_category(v):
+                if v <= 50:   return "Good"
+                elif v <= 100: return "Moderate"
+                elif v <= 150: return "Unhealthy (Sensitive)"
+                elif v <= 200: return "Unhealthy"
+                elif v <= 300: return "Very Unhealthy"
+                else:          return "Hazardous"
+
+            AQI_COLORS = {
+                "Good": "#27ae60", "Moderate": "#f5d300",
+                "Unhealthy (Sensitive)": "#e67e22", "Unhealthy": "#e74c3c",
+                "Very Unhealthy": "#8e44ad", "Hazardous": "#c0392b"
+            }
+            aqi_cat = air_df["aqi"].apply(aqi_category)
+            cat_counts = aqi_cat.value_counts().reset_index()
+            cat_counts.columns = ["Category", "Days"]
+
+            cc1, cc2 = st.columns([1, 2])
+            with cc1:
+                fig_pie_aqi = px.pie(cat_counts, names="Category", values="Days",
+                                     color="Category", color_discrete_map=AQI_COLORS, hole=0.45)
+                dark_layout(fig_pie_aqi, height=340, title="AQI Category Split")
+                st.plotly_chart(fig_pie_aqi, use_container_width=True)
+            with cc2:
+                fig_cat_bar = px.bar(cat_counts, x="Category", y="Days",
+                                     color="Category", color_discrete_map=AQI_COLORS, text="Days")
+                fig_cat_bar.update_traces(textposition="outside")
+                dark_layout(fig_cat_bar, height=340, title="Days per AQI Category")
+                st.plotly_chart(fig_cat_bar, use_container_width=True)
+
+            good_pct = (aqi_cat == "Good").mean() * 100
+            bad_pct  = (aqi_cat.isin(["Unhealthy","Very Unhealthy","Hazardous"])).mean() * 100
+            st.markdown(insight_card("💡",
+                f"<strong>{good_pct:.1f}%</strong> of days had Good air quality. "
+                f"<strong>{bad_pct:.1f}%</strong> of days were classified as Unhealthy or worse, "
+                f"posing direct respiratory risk for vulnerable populations."), unsafe_allow_html=True)
+
+        # ── Pollutant Trends ──────────────────────────────────
+        st.markdown('<div class="sec-hdr">📈 Pollutant Time Series</div>', unsafe_allow_html=True)
+        poll_sel = st.multiselect("Select pollutants to display", aq_cols,
+                                  default=aq_cols[:min(3, len(aq_cols))], key="aq_poll")
+        if poll_sel:
+            ts_aq = air_df.groupby("date")[poll_sel].mean().sort_index()
+            poll_colors = [ACCENT, ACCENT_2, ACCENT_3, "#a8edea", "#FF6B6B"]
+            fig_poll = go.Figure()
+            for i, col_name in enumerate(poll_sel):
+                fig_poll.add_trace(go.Scatter(
+                    x=ts_aq.index, y=ts_aq[col_name].rolling(7).mean(),
+                    mode="lines", name=f"{col_name.upper()} (7d MA)",
+                    line=dict(color=poll_colors[i % len(poll_colors)], width=2)
+                ))
+            dark_layout(fig_poll, height=380, title="Pollutant Levels Over Time (7-day MA)")
+            st.plotly_chart(fig_poll, use_container_width=True)
+
+        # ── Monthly Heatmap ───────────────────────────────────
+        st.markdown('<div class="sec-hdr">🗓️ Monthly Average Pollutant Heatmap</div>', unsafe_allow_html=True)
+        hm_col = st.selectbox("Pollutant for heatmap", aq_cols, key="aq_hm")
+        df_hm = air_df.copy()
+        df_hm["month"] = df_hm["date"].dt.month_name()
+        df_hm["year"]  = df_hm["date"].dt.year
+        pivot = df_hm.groupby(["year","month"])[hm_col].mean().unstack()
+        month_order = ["January","February","March","April","May","June",
+                       "July","August","September","October","November","December"]
+        pivot = pivot[[m for m in month_order if m in pivot.columns]]
+        fig_hm = px.imshow(pivot, text_auto=".1f", color_continuous_scale="YlOrRd",
+                           aspect="auto", labels=dict(color=hm_col.upper()))
+        dark_layout(fig_hm, height=380, title=f"Monthly {hm_col.upper()} Heatmap (Year × Month)")
+        st.plotly_chart(fig_hm, use_container_width=True)
+
+        # ── AQI vs Temperature Correlation ────────────────────
+        if "aqi" in air_df.columns and "avg_temp" in temp_df.columns:
+            st.markdown('<div class="sec-hdr">🌡️ AQI vs Temperature Correlation</div>', unsafe_allow_html=True)
+            ts_temp = temp_df.groupby("date")["avg_temp"].mean()
+            ts_aqi  = air_df.groupby("date")["aqi"].mean()
+            corr_df = pd.DataFrame({"avg_temp": ts_temp, "aqi": ts_aqi}).dropna()
+            corr_val = corr_df.corr().loc["avg_temp","aqi"]
+
+            fig_aqi_temp = px.scatter(corr_df.sample(min(2000, len(corr_df)), random_state=1),
+                                       x="avg_temp", y="aqi",
+                                       trendline="ols", opacity=0.45,
+                                       color_discrete_sequence=[ACCENT_2],
+                                       trendline_color_override=ACCENT)
+            fig_aqi_temp.update_xaxes(title_text="Average Temperature (°C)")
+            fig_aqi_temp.update_yaxes(title_text="AQI")
+            dark_layout(fig_aqi_temp, height=380, title=f"AQI vs Temperature (r = {corr_val:.3f})")
+            st.plotly_chart(fig_aqi_temp, use_container_width=True)
+
+            direction = "positive" if corr_val > 0 else "negative"
+            st.markdown(insight_card("🔬",
+                f"Pearson correlation between temperature and AQI is <strong>r = {corr_val:.3f}</strong> "
+                f"({direction} relationship). Higher temperatures tend to {'worsen' if corr_val > 0 else 'improve'} "
+                f"air quality, likely through photochemical reactions amplifying ozone and particulate formation."),
+                unsafe_allow_html=True)
+
+        # ── Export ────────────────────────────────────────────
+        st.markdown('<div class="sec-hdr">📥 Export Air Quality Data</div>', unsafe_allow_html=True)
+        st.download_button("⬇️ Download Air Quality CSV", air_df.to_csv(index=False).encode(),
+                           "air_quality.csv", "text/csv", use_container_width=True)
+
+
 # ──────────────────────────── HEALTH IMPACT ───────────────────
 elif current == "health":
+
     st.markdown('<div class="hero-title">🏥 Temperature → Health Impact</div>', unsafe_allow_html=True)
     st.markdown('<div class="hero-sub">Tempreture_Health.ipynb · OLS chain: Urban Structure → Heat → Health</div>', unsafe_allow_html=True)
 
@@ -921,8 +1314,8 @@ elif current == "health":
             with r1c:
                 st.dataframe(coef_df, hide_index=True, use_container_width=True)
             with r1m:
-                st.metric("R²", f"{m1.rsquared:.3f}")
-                st.metric("F-stat", f"{m1.fvalue:.0f}")
+                st.markdown(kpi_card("R²", f"{m1.rsquared:.3f}"), unsafe_allow_html=True)
+                st.markdown(kpi_card("F-stat", f"{m1.fvalue:.0f}"), unsafe_allow_html=True)
                 st.caption("Notebook R² ≈ 0.132\nAll vars significant (p<0.001)")
 
             # Coefficient bar
@@ -941,7 +1334,7 @@ elif current == "health":
             df_h3 = health_df.dropna(subset=["avg_temp_lag3","heat_fatigue_cases"])
             X2 = sm.add_constant(df_h3[["avg_temp_lag3","social_vulnerability_index"]].sample(min(50000, len(df_h3)), random_state=1))
             y2 = df_h3.loc[X2.index, "heat_fatigue_cases"]
-            m2 = sm.OLS(y2, X2).fit()
+            m2 = sm.GLM(y2, X2, family=sm.families.Poisson()).fit()
 
             c2a, c2b = st.columns([2,1])
             coef_d2 = pd.DataFrame({
@@ -951,16 +1344,19 @@ elif current == "health":
             })
             with c2a: st.dataframe(coef_d2, hide_index=True, use_container_width=True)
             with c2b:
-                st.metric("R²", f"{m2.rsquared:.3f}")
+                pseudo_r2 = 1 - (m2.deviance / m2.null_deviance)
+                st.markdown(kpi_card("Pseudo R²", f"{pseudo_r2:.3f}"), unsafe_allow_html=True)
                 st.caption("Notebook lag-3 R² ≈ 0.622")
 
         # ── Model 3: Lag-5 → Heatstroke Deaths ───────────────
         st.markdown('<div class="sec-hdr">Model 3 — Temp (lag-5) → Heatstroke Deaths</div>', unsafe_allow_html=True)
-        if all(c in health_df.columns for c in ["avg_temp_lag5","heatstroke_deaths"]):
+        # BUG FIX: guard for social_vulnerability_index existence
+        glm3_feats = [f for f in ["avg_temp_lag5", "social_vulnerability_index"] if f in health_df.columns]
+        if "avg_temp_lag5" in health_df.columns and "heatstroke_deaths" in health_df.columns and glm3_feats:
             df_h5 = health_df.dropna(subset=["avg_temp_lag5","heatstroke_deaths"])
-            X3 = sm.add_constant(df_h5[["avg_temp_lag5","social_vulnerability_index"]].sample(min(50000, len(df_h5)), random_state=1))
+            X3 = sm.add_constant(df_h5[glm3_feats].sample(min(50000, len(df_h5)), random_state=1))
             y3 = df_h5.loc[X3.index, "heatstroke_deaths"]
-            m3_ols = sm.OLS(y3, X3).fit()
+            m3_ols = sm.GLM(y3, X3, family=sm.families.Poisson()).fit()
 
             c3a, c3b = st.columns([2,1])
             coef_d3 = pd.DataFrame({
@@ -970,7 +1366,8 @@ elif current == "health":
             })
             with c3a: st.dataframe(coef_d3, hide_index=True, use_container_width=True)
             with c3b:
-                st.metric("R²", f"{m3_ols.rsquared:.3f}")
+                pseudo_r2_3 = 1 - (m3_ols.deviance / m3_ols.null_deviance)
+                st.markdown(kpi_card("Pseudo R²", f"{pseudo_r2_3:.3f}"), unsafe_allow_html=True)
                 st.caption("Notebook lag-5 R² ≈ 0.698\nTemp coef ≈ +0.162")
 
         # ── Visual: Lag effect on health ─────────────────────
@@ -1007,9 +1404,9 @@ elif current == "health":
         # Summary boxes
         st.markdown('<div class="sec-hdr">📌 Key Findings</div>', unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
-        c1.info("**Model 1 — Surface Temp**\n\nR² ≈ 0.132\n\nHeat retention (+4.9), Building density (+4.1), Asphalt (+0.18), Tree cover (−0.05)")
-        c2.success("**Model 2 — Heat Fatigue (lag-3)**\n\nR² ≈ 0.622\n\nEvery +1°C (lag-3) adds **+1.34 cases**")
-        c3.error("**Model 3 — Heatstroke Deaths (lag-5)**\n\nR² ≈ 0.698\n\nEvery +1°C (lag-5) adds **+0.16 deaths**\n\nSocial vulnerability significant (p<0.001)")
+        c1.info("**Model 1 — Surface Temp (OLS)**\n\nIdentifies strong positive relationship between asphalt/building density and heat.")
+        c2.success("**Model 2 — Heat Fatigue (Poisson GLM)**\n\nStatistically accurate count model shows +1°C (lag-3) significantly increases fatigue cases.")
+        c3.error("**Model 3 — Heatstroke Deaths (Poisson GLM)**\n\nCount model validates that +1°C (lag-5) and high social vulnerability compound fatality risks.")
 
     except ImportError:
         st.error("statsmodels not installed. Run: `pip install statsmodels`")
